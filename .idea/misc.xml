@@ -3,6 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font-en/custom_font_family.xml" value="0.13055555555555556" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font-en/font_custom.xml" value="0.3921875" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font-en/font_family.xml" value="0.1" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font-ko/custom_font_family.xml" value="0.13055555555555556" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font-ko/font_custom.xml" value="0.3921875" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font-ko/font_family.xml" value="0.1" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font-mcc310/font_family.xml" value="0.1" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font-mcc450/font.xml" value="0.1" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font/font.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font/font_custom.xml" value="0.6" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font/font_eng.xml" value="0.1" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font/font_family.xml" value="0.11851851851851852" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font/font_family_eng.xml" value="0.1" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font/font_family_kor.xml" value="0.1" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/font/font_kor.xml" value="0.1" />
+        <entry key="..\:/Users/2minh/Desktop/android-practice/font/src/main/res/layout/activity_main.xml" value="0.6" />
         <entry key="..\:/Users/2minh/Desktop/android-practice/retrofit-get/src/main/res/layout/activity_main.xml" value="0.1" />
       </map>
     </option>
