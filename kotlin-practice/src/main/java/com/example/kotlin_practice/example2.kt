@@ -9,6 +9,14 @@ fun main() {
     nonNull("minha")
     print("4. fun nullSafe() : ")
     nullSafe()
+    println("5. class")
+    val human = Human("minha")
+    human.running()
+    println("my name is ${human.name}")
+    println("6. inheritance")
+    val korean = Korean()
+    korean.running()
+    println("my name is ${human.name}")
 }
 
 fun nullCheck() {
@@ -34,5 +42,22 @@ fun nullSafe() {
     val name: String? = "Minha Lee"
     name?.let{
         println("My name is ${name}")
+    }
+}
+
+open class Human (val name: String = "Anonymous") {
+    init {
+        println("I am new human")
+    }
+
+    open fun running() {
+        println("Running is so tired")
+    }
+}
+
+class Korean: Human("seungjae") {
+    override fun running() {
+        super.running()
+        println("아 힘들다")
     }
 }
