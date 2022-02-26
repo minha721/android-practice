@@ -16,3 +16,4 @@ rootProject.name = "AndroidPractice"
 include ':app'
 include ':retrofit-get'
 include ':font'
+include ':kotlin-practice'
