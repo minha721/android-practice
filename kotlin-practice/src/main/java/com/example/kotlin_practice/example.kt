@@ -12,6 +12,26 @@ fun main() {
     variable3()
     println("6. fun arrayAndList() : ")
     arrayAndList()
+    print("7. checkScore() : ")
+    checkScore(70)
+    println("8. range() : ")
+    range()
+    print("9. oddNumbers() : ")
+    oddNumbers()
+    print("10. evenNumbersDown() : ")
+    evenNumbersDown()
+    print("11. evenNumbersDown2() : ")
+    evenNumbersDown2()
+    println("12. maxBy() : ${maxBy(5, 9)}")
+    println("13. maxBy2() : ${maxBy2(7, 3)}")
+    print("14. checkScore2() : ")
+    checkScore2("D")
+    print("15. sumFor() : ")
+    sumFor()
+    println("16. indexWhile() : ")
+    indexWhile()
+    print("17. withIndexFor() : ")
+    withIndexFor()
 }
 
 fun helloWorld() {
@@ -78,4 +98,85 @@ fun arrayAndList() {
     println("array is {$myArray}")
     println("list is {$myList}, list[1] is {$result}")
     println("arrayList is {$myArrayList}")
+}
+
+fun checkScore(score: Int) {
+    when(score) {
+        in 90..100 -> println("Excellent")
+        in 70 until 90 -> println("Great")
+        in 40 until 70 -> println("Not bad")
+        else -> println("Fighting")
+    }
+}
+
+fun range() {
+    val rangeTo = 10.rangeTo(20)
+    val countingDown = 100.downTo(50)
+
+    println("rangeTo : $rangeTo")
+    println("countingDown : $countingDown")
+}
+
+fun oddNumbers() {
+    val oneToFifty = 1..50
+    val oddNumbers = oneToFifty.step(2)
+
+    println("oddNumbers : $oddNumbers")
+}
+
+fun evenNumbersDown() {
+    val fiftyToZero = 50.downTo(0)
+    val evenNumbersDown = fiftyToZero.step(2)
+
+    println("evenNumbersDown : $evenNumbersDown")
+}
+
+fun evenNumbersDown2() {
+    val evenNumbersDown2 = (0..50).step(2).reversed()
+
+    println("evenNumbersDown2 : $evenNumbersDown2")
+}
+
+fun maxBy(a: Int, b: Int): Int {
+    if(a>b) {
+        return a
+    } else {
+        return b
+    }
+}
+
+fun maxBy2(a: Int, b: Int): Int = if(a>b) a else b
+
+fun checkScore2(score: String) {
+    when(score) {
+        "A" -> println("score is A")
+        "B" -> println("score is B")
+        "C", "D", "F" -> println("score is under B")
+        else -> println("I don't know")
+    }
+}
+
+fun sumFor() {
+    var sum = 0
+    for(i in 1..10 step 2) {
+        sum += i
+    }
+    println(sum)
+}
+
+fun indexWhile() {
+    var index = 0
+
+    while(index < 10) {
+        println("index : ${index}")
+        index++
+    }
+}
+
+fun withIndexFor() {
+    val students = arrayListOf("이민하", "오승재", "이짱구")
+
+    for((index, name) in students.withIndex()){
+        println("${index+1}번째 학생 : ${name}")
+    }
 }
