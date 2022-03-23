@@ -8,6 +8,8 @@ fun main() {
     println(name.introduce(25))
     println("4. lambda return : ${grade(98)}")
     println("5. data class movie : ${movie()}")
+    print("6. companion object student : ")
+    student()
 }
 
 val square: (Int) -> (Int) = {number -> number*number}
@@ -34,4 +36,27 @@ data class Movie(val name: String, val genre: String, val director: String, val 
 fun movie(): Movie {
     val movie = Movie("Frozen 2", "Animation", "크리스 벅", 8.95F)
     return movie
+}
+
+class Student private constructor(val id: Int, val name: String){
+    companion object StudentInfo: IdProvider {
+
+        override fun getId(): Int {
+            return 12345
+        }
+
+        val name = "minha"
+        fun create() = Student(getId(), name)
+    }
+}
+
+interface IdProvider {
+    fun getId(): Int
+}
+
+fun student() {
+    val student = Student.StudentInfo.create()
+    val studentId = Student.StudentInfo.getId()
+
+    println("Id is ${studentId}. Name is ${student.name}.")
 }
