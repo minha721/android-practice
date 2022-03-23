@@ -10,6 +10,8 @@ fun main() {
     println("5. data class movie : ${movie()}")
     print("6. companion object student : ")
     student()
+    print("7. object phone : ")
+    phone()
 }
 
 val square: (Int) -> (Int) = {number -> number*number}
@@ -59,4 +61,23 @@ fun student() {
     val studentId = Student.StudentInfo.getId()
 
     println("Id is ${studentId}. Name is ${student.name}.")
+}
+
+data class Phone(val serialNum: Int)
+
+object PhoneFactory {
+    val phones = mutableListOf<Phone>()
+
+    fun makePhone(serialNum: Int): Phone {
+        val phone = Phone(serialNum)
+        phones.add(phone)
+        return phone
+    }
+}
+
+fun phone() {
+    val phone1 = PhoneFactory.makePhone(12345)
+    val phone2 = PhoneFactory.makePhone(67890)
+
+    println("phone1 is ${phone1}, phone2 is ${phone2}, phones size is ${PhoneFactory.phones.size.toString()}")
 }
