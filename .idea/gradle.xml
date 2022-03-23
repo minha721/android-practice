@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/kotlin-practice" />
             <option value="$PROJECT_DIR$/retrofit-get" />
             <option value="$PROJECT_DIR$/room-db" />
+            <option value="$PROJECT_DIR$/youtube-player" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
