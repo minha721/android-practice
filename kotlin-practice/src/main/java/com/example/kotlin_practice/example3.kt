@@ -7,6 +7,7 @@ fun main() {
     val name = "minha"
     println(name.introduce(25))
     println("4. lambda return : ${grade(98)}")
+    println("5. data class movie : ${movie()}")
 }
 
 val square: (Int) -> (Int) = {number -> number*number}
@@ -26,4 +27,11 @@ val grade: (Int) -> (String) = {
         in 71..100 -> "Great"
         else -> "Error"
     }
+}
+
+data class Movie(val name: String, val genre: String, val director: String, val score: Float)
+
+fun movie(): Movie {
+    val movie = Movie("Frozen 2", "Animation", "크리스 벅", 8.95F)
+    return movie
 }
