@@ -1,5 +1,7 @@
 package com.example.dagger_pracitce
 
+import com.example.dagger_pracitce.person.DaggerPersonComponent
+import com.example.dagger_pracitce.person.PersonB
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -13,5 +15,17 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test
+    fun testInjection() {
+        val personComponent = DaggerPersonComponent.create()
+
+        val personA = personComponent.getPersonA()
+        println("${personA.name} : ${personA.age}")
+
+        val personB = PersonB()
+        DaggerPersonComponent.create().inject(personB)
+        println("${personB.name} : ${personB.age}")
     }
 }
