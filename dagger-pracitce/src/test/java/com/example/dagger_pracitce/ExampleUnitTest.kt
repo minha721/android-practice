@@ -2,6 +2,8 @@ package com.example.dagger_pracitce
 
 import com.example.dagger_pracitce.lazy.Counter
 import com.example.dagger_pracitce.lazy.DaggerCounterComponent
+import com.example.dagger_pracitce.named.DaggerStringComponent
+import com.example.dagger_pracitce.named.MyString
 import com.example.dagger_pracitce.person.DaggerPersonComponent
 import com.example.dagger_pracitce.person.PersonB
 import com.example.dagger_pracitce.provider.DaggerPCounterComponent
@@ -54,5 +56,13 @@ class ExampleUnitTest {
         val counter = PCounter()
         providerComponent.inject(counter)
         counter.printProvider()
+    }
+
+    @Test
+    fun testNamed() {
+        val myString = MyString()
+        DaggerStringComponent.create().inject(myString)
+        println(myString.strHello)
+        println(myString.strWorld)
     }
 }
