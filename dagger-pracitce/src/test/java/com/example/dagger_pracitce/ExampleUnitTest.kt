@@ -6,6 +6,7 @@ import com.example.dagger_pracitce.person.DaggerPersonComponent
 import com.example.dagger_pracitce.person.PersonB
 import com.example.dagger_pracitce.provider.DaggerPCounterComponent
 import com.example.dagger_pracitce.provider.PCounter
+import com.example.dagger_pracitce.simple.DaggerMyComponent
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -19,6 +20,12 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test
+    fun testSimpleExample() {
+        val component = DaggerMyComponent.create()
+        println("result = ${component.getString()}")
     }
 
     @Test
