@@ -4,6 +4,8 @@ import com.example.dagger_pracitce.lazy.Counter
 import com.example.dagger_pracitce.lazy.DaggerCounterComponent
 import com.example.dagger_pracitce.person.DaggerPersonComponent
 import com.example.dagger_pracitce.person.PersonB
+import com.example.dagger_pracitce.provider.DaggerPCounterComponent
+import com.example.dagger_pracitce.provider.PCounter
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -37,5 +39,13 @@ class ExampleUnitTest {
         val counter = Counter()
         counterComponent.inject(counter)
         counter.printLazy()
+    }
+
+    @Test
+    fun testProviderInjection() {
+        val providerComponent = DaggerPCounterComponent.create()
+        val counter = PCounter()
+        providerComponent.inject(counter)
+        counter.printProvider()
     }
 }
