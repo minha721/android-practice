@@ -1,5 +1,7 @@
 package com.example.dagger_pracitce
 
+import com.example.dagger_pracitce.lazy.Counter
+import com.example.dagger_pracitce.lazy.DaggerCounterComponent
 import com.example.dagger_pracitce.person.DaggerPersonComponent
 import com.example.dagger_pracitce.person.PersonB
 import org.junit.Test
@@ -27,5 +29,13 @@ class ExampleUnitTest {
         val personB = PersonB()
         DaggerPersonComponent.create().inject(personB)
         println("${personB.name} : ${personB.age}")
+    }
+
+    @Test
+    fun testLazyInjection() {
+        val counterComponent = DaggerCounterComponent.create()
+        val counter = Counter()
+        counterComponent.inject(counter)
+        counter.printLazy()
     }
 }
