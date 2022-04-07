@@ -9,6 +9,7 @@ import com.example.dagger_pracitce.person.PersonB
 import com.example.dagger_pracitce.provider.DaggerPCounterComponent
 import com.example.dagger_pracitce.provider.PCounter
 import com.example.dagger_pracitce.simple.DaggerMyComponent
+import com.example.dagger_pracitce.singleton.DaggerSMyComponent
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -64,5 +65,14 @@ class ExampleUnitTest {
         DaggerStringComponent.create().inject(myString)
         println(myString.strHello)
         println(myString.strWorld)
+    }
+
+    @Test
+    fun testSingleton() {
+        val myComponent = DaggerSMyComponent.create()
+        val temp1 = myComponent.getObject()
+        val temp2 = myComponent.getObject()
+
+        assertSame(temp1, temp2)
     }
 }
