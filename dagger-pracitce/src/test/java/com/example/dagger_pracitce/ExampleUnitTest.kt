@@ -1,5 +1,8 @@
 package com.example.dagger_pracitce
 
+import com.example.dagger_pracitce.binding.DaggerNoStrComponent
+import com.example.dagger_pracitce.binding.DaggerStrComponent
+import com.example.dagger_pracitce.binding.Foo
 import com.example.dagger_pracitce.lazy.Counter
 import com.example.dagger_pracitce.lazy.DaggerCounterComponent
 import com.example.dagger_pracitce.named.DaggerStringComponent
@@ -74,5 +77,18 @@ class ExampleUnitTest {
         val temp2 = myComponent.getObject()
 
         assertSame(temp1, temp2)
+    }
+
+    @Test
+    fun testBindings() {
+        val foo = Foo()
+
+        DaggerStrComponent.create().inject(foo)
+        println(foo.str!!.isPresent)
+        println(foo.str!!.get())
+
+        DaggerNoStrComponent.create().inject(foo)
+        println(foo.str!!.isPresent)
+        println(foo.str!!.get())
     }
 }
