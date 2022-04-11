@@ -5,17 +5,20 @@ import com.example.dagger_pracitce.binding.DaggerStrComponent
 import com.example.dagger_pracitce.binding.Foo
 import com.example.dagger_pracitce.lazy.Counter
 import com.example.dagger_pracitce.lazy.DaggerCounterComponent
+import com.example.dagger_pracitce.map_multibinding.DaggerMapComponent
 import com.example.dagger_pracitce.named.DaggerStringComponent
 import com.example.dagger_pracitce.named.MyString
 import com.example.dagger_pracitce.person.DaggerPersonComponent
 import com.example.dagger_pracitce.person.PersonB
 import com.example.dagger_pracitce.provider.DaggerPCounterComponent
 import com.example.dagger_pracitce.provider.PCounter
+import com.example.dagger_pracitce.set_multibinding.DaggerSetComponent
 import com.example.dagger_pracitce.simple.DaggerMyComponent
 import com.example.dagger_pracitce.singleton.DaggerSMyComponent
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertSame
 import org.junit.Test
 
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -90,5 +93,22 @@ class ExampleUnitTest {
         DaggerNoStrComponent.create().inject(foo)
         println(foo.str!!.isPresent)
         println(foo.str!!.get())
+    }
+
+    @Test
+    fun testSetMultiBinding() {
+        val foo = com.example.dagger_pracitce.set_multibinding.Foo()
+        DaggerSetComponent.create().inject(foo)
+        foo.print()
+    }
+
+    @Test
+    fun testMapMultiBinding() {
+        val component = DaggerMapComponent.create()
+        val lVal = component.getLongsByString?.get("foo")!!
+        val sVal = component.getStringsByClass?.get(Foo::class.java)
+
+        println(lVal)
+        println(sVal)
     }
 }
