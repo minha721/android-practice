@@ -3,6 +3,7 @@ package com.example.dagger_pracitce
 import com.example.dagger_pracitce.binding.DaggerNoStrComponent
 import com.example.dagger_pracitce.binding.DaggerStrComponent
 import com.example.dagger_pracitce.binding.Foo
+import com.example.dagger_pracitce.inheritance.*
 import com.example.dagger_pracitce.lazy.Counter
 import com.example.dagger_pracitce.lazy.DaggerCounterComponent
 import com.example.dagger_pracitce.map_multibinding.DaggerMapComponent
@@ -119,5 +120,19 @@ class ExampleUnitTest {
         println(cafe.orderCoffee())
         println(cafe.orderCoffee())
         println(cafe.orderCoffee())
+    }
+
+    @Test
+    fun testComponentInheritance() {
+        val foobar = Foobar()
+
+        val componentA: ComponentA = DaggerComponentA.create()
+        val componentB: ComponentB = DaggerComponentB.builder()
+            .componentA(componentA).build()
+
+        componentB.inject(foobar)
+
+        println(foobar.str)
+        println(foobar.numInt)
     }
 }
