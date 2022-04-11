@@ -15,6 +15,7 @@ import com.example.dagger_pracitce.provider.PCounter
 import com.example.dagger_pracitce.set_multibinding.DaggerSetComponent
 import com.example.dagger_pracitce.simple.DaggerMyComponent
 import com.example.dagger_pracitce.singleton.DaggerSMyComponent
+import com.example.dagger_pracitce.subcomponent.Cafe
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Test
@@ -110,5 +111,13 @@ class ExampleUnitTest {
 
         println(lVal)
         println(sVal)
+    }
+
+    @Test
+    fun testSubComponent() {
+        val cafe = Cafe()
+        println(cafe.orderCoffee())
+        println(cafe.orderCoffee())
+        println(cafe.orderCoffee())
     }
 }
