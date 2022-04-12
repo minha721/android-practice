@@ -1,17 +1,15 @@
 package com.example.android_dagger
 
-import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
+import dagger.android.AndroidInjector
 import javax.inject.Singleton
 
-@Component(modules = [AppModule::class])
+@Component(modules = [AndroidInjectionModule::class, AppModule::class])
 @Singleton
-interface AppComponent {
-    fun mainActivityComponentBuilder(): MainActivityComponent.Builder
-    fun inject(app: App)
+interface AppComponent : AndroidInjector<App> {
 
     @Component.Factory
-    interface Factory {
-        fun create(@BindsInstance app: App, appModule: AppModule): AppComponent
+    interface Factory : AndroidInjector.Factory<App> {
     }
 }

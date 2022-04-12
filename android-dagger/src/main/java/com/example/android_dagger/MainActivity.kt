@@ -1,33 +1,43 @@
 package com.example.android_dagger
 
 import javax.inject.Inject
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import javax.inject.Named
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), HasAndroidInjector {
     @JvmField
     @Inject
-    var sharedPreferences: SharedPreferences? = null
+    var androidInjector: DispatchingAndroidInjector<Any>? = null
 
     @JvmField
     @Inject
-    var activityName: String? = null
+    @Named("app")
+    var appString: String? = null
 
-    var component: MainActivityComponent? = null
+    @JvmField
+    @Inject
+    @Named("activity")
+    var activityString: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
+        Log.e("MainActivity", appString!!)
+        Log.e("MainActivity", activityString!!)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        component = (application as App).appComponent
-            ?.mainActivityComponentBuilder()
-            ?.setModule(MainActivityModule())
-            ?.setActivity(this)
-            ?.build()
-        component!!.inject(this)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, MainFragment())
             .commit()
+    }
+
+    override fun androidInjector(): AndroidInjector<Any> {
+        return androidInjector!!
     }
 }
