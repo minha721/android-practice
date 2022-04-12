@@ -1,19 +1,15 @@
 package com.example.android_dagger
 
-import dagger.Binds
-import dagger.multibindings.IntoMap
-import dagger.multibindings.ClassKey
 import dagger.Module
 import dagger.Provides
-import dagger.android.AndroidInjector
+import dagger.android.ContributesAndroidInjector
 import javax.inject.Named
 
-@Module(subcomponents = [MainFragmentSubcomponent::class])
+@Module
 abstract class MainActivityModule {
-    @Binds
-    @IntoMap
-    @ClassKey(MainFragment::class)
-    abstract fun bindInjectorFactory(factory: MainFragmentSubcomponent.Factory?): AndroidInjector.Factory<*>?
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [MainFragmentModule::class])
+    abstract fun mainFragment(): MainFragment
 
     companion object {
         @Named("activity")
