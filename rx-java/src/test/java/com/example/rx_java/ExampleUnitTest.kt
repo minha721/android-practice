@@ -1,13 +1,14 @@
 package com.example.rx_java
 
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.reactivestreams.Publisher
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
+
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -139,5 +140,99 @@ class ExampleUnitTest {
         val callable: Callable<String> = Callable<String> { "Hello World" }
         val source: Observable<String> = Observable.fromCallable(callable)
         source.subscribe(System.out::println)
+    }
+
+    @Test
+    fun single_just() {
+        Single.just("Hello World").subscribe(System.out::println)
+    }
+
+    @Test
+    fun single_onSuccess() {
+        // it: SingleEmitter<String>
+        Single.create<String> { it.onSuccess("Hello") }.subscribe {
+                it -> println(it)
+        }
+    }
+
+    @Test
+    fun observable_to_single() {
+        val src = Observable.just(1, 2, 3)
+
+        val singleSrc1 = src.all { i: Int -> i > 0 }
+        val singleSrc2 = src.first(-1)
+        val singleSrc3 = src.toList()
+
+        singleSrc1.subscribe(System.out::println)
+        singleSrc2.subscribe(System.out::println)
+        singleSrc3.subscribe(System.out::println)
+    }
+
+    @Test
+    fun single_to_observable() {
+        val singleSrc = Single.just("Hello World")
+        val observableSrc = singleSrc.toObservable()
+
+        observableSrc.subscribe(System.out::println)
+    }
+
+    @Test
+    fun maybe_ex() {
+        Maybe.create { emitter: MaybeEmitter<Any?> ->
+            emitter.onSuccess(100)
+            emitter.onComplete() // 무시됨
+        }
+            .doOnSuccess { item: Any? -> println("doOnSuccess1") }
+            .doOnComplete { println("doOnComplete1") }
+            .subscribe { x: Any? -> println(x) }
+
+        Maybe.create { emitter: MaybeEmitter<Any?> -> emitter.onComplete() }
+            .doOnSuccess { item: Any? -> println("doOnSuccess2") }
+            .doOnComplete { println("doOnComplete2") }
+            .subscribe { x: Any? -> println(x) }
+    }
+
+    @Test
+    fun observable_to_maybe() {
+        val src1 = Observable.just(1, 2, 3)
+        val srcMaybe1 = src1.firstElement()
+        srcMaybe1.subscribe { x: Int? -> println(x) }
+
+        val src2 = Observable.empty<Int>()
+        val srcMaybe2 = src2.firstElement()
+        srcMaybe2.subscribe(
+            { x: Int? -> println(x) },
+            { throwable: Throwable? -> }
+        ) { println("onComplete") }
+    }
+
+    @Test
+    fun completable_ex() {
+        Completable.create { emitter: CompletableEmitter ->
+            // do something here
+            emitter.onComplete()
+        }.subscribe { println("completed1") }
+
+        Completable.fromRunnable {}.subscribe { println("completed2") }
+    }
+
+    @Test
+    fun simple_cold_observable() {
+        val src = Observable.interval(1, TimeUnit.SECONDS)
+        src.subscribe { value -> println("#1: $value") }
+        Thread.sleep(3000)
+        src.subscribe { value -> println("#2: $value") }
+        Thread.sleep(3000)
+    }
+
+    @Test
+    fun simple_hot_observable() {
+        val src = Observable.interval(1, TimeUnit.SECONDS).publish()
+        src.connect()
+        src.subscribe()
+        src.subscribe { value -> println("#1: $value") }
+        Thread.sleep(3000)
+        src.subscribe { value -> println("#2: $value") }
+        Thread.sleep(3000)
     }
 }
