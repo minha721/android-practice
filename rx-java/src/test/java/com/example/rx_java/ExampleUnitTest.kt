@@ -1,6 +1,9 @@
 package com.example.rx_java
 
 import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper.isDisposed
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -234,5 +237,47 @@ class ExampleUnitTest {
         Thread.sleep(3000)
         src.subscribe { value -> println("#2: $value") }
         Thread.sleep(3000)
+    }
+
+    @Test
+    fun autoConnect_method() {
+        val src = Observable.interval(100, TimeUnit.MILLISECONDS).publish().autoConnect(2)
+        src.subscribe { i -> println("A: $i") }
+        src.subscribe { i -> println("B: $i") }
+        Thread.sleep(500)
+    }
+
+    @Test
+    fun create_disposable() {
+        val source = Observable.just("A", "B", "C")
+        val disposable = source.subscribe { _ -> println(source) }
+    }
+
+    @Test
+    fun simple_disposable() {
+        val source = Observable.interval(1000, TimeUnit.MILLISECONDS)
+        val disposable: Disposable = source.subscribe(System.out::println)
+
+        Thread.sleep(3500)
+        disposable.dispose()
+    }
+
+    @Test
+    fun simple_compositeDisposable() {
+        val source = Observable.interval(1000, TimeUnit.MILLISECONDS)
+
+        val d1 = source.subscribe(System.out::println)
+        val d2 = source.subscribe(System.out::println)
+        val d3 = source.subscribe(System.out::println)
+        val cd = CompositeDisposable()
+
+        cd.add(d1)
+        cd.add(d2)
+        cd.add(d3)
+        // 또는 cd.addAll(d1, d2, d3)
+
+        // 특정 시점에서 폐기
+        Thread.sleep(3000)
+        cd.dispose()
     }
 }
