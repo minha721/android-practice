@@ -1,6 +1,7 @@
 package com.example.rx_java
 
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableEmitter
 import io.reactivex.rxjava3.disposables.Disposable
 import org.junit.Test
 import java.util.concurrent.TimeUnit
@@ -128,5 +129,228 @@ class ExampleUnitTest2 {
             return "T"
         }
         return "None"
+    }
+
+    @Test
+    fun debounce_method() {
+        Observable.create { emitter: ObservableEmitter<Any?> ->
+            emitter.onNext("1")
+            Thread.sleep(110)
+            emitter.onNext("2")
+            emitter.onNext("3")
+            emitter.onNext("4")
+            emitter.onNext("5")
+            Thread.sleep(90)
+            emitter.onNext("6")
+        }
+            .debounce(100, TimeUnit.MILLISECONDS)
+            .subscribe { x: Any? -> println(x) }
+
+        Thread.sleep(300)
+    }
+
+    @Test
+    fun distinct_method() {
+        Observable.just(1,2,2,1,3)
+            .distinct()
+            .subscribe{ x -> println(x) }
+    }
+
+    @Test
+    fun elementAt_method() {
+        Observable.just(1,2,3,4)
+            .elementAt(2)
+            .subscribe{ x -> println(x) }
+    }
+
+    @Test
+    fun filter_method() {
+        Observable.just(2,30,22,5,60,1)
+            .filter{ x -> x>10 }
+            .subscribe{ x -> println(x) }
+    }
+
+    @Test
+    fun sample_method() {
+        Observable.interval(100, TimeUnit.MILLISECONDS)
+            .sample(300, TimeUnit.MILLISECONDS)
+            .subscribe{ x -> println(x) }
+        Thread.sleep(1000)
+    }
+
+    @Test
+    fun skip_method() {
+        Observable.just(1,2,3,4)
+            .skip(2)
+            .subscribe{ x -> println(x) }
+    }
+
+    @Test
+    fun take_method() {
+        Observable.just(1,2,3,4)
+            .take(2)
+            .subscribe{ x -> println(x) }
+    }
+
+    @Test
+    fun all_method() {
+        Observable.just(1,2,3)
+            .all{ integer -> integer>0 }
+            .subscribe{ x -> println(x) }
+
+        Observable.just(0,1,2,3)
+            .all{ integer -> integer>0 }
+            .subscribe{ x -> println(x) }
+    }
+
+    @Test
+    fun amb_method() {
+        val list: ArrayList<Observable<Int>> = ArrayList()
+        list.add(Observable.just(20, 40, 60)
+                .delay(100, TimeUnit.MILLISECONDS))
+        list.add(Observable.just(1, 2, 3))
+        list.add(Observable.just(0, 0, 0)
+                .delay(200, TimeUnit.MILLISECONDS))
+        Observable.amb<Any>(list).subscribe { x -> println(x) }
+    }
+
+    @Test
+    fun combineLatest_method() {
+        val src1 = Observable.create { emitter: ObservableEmitter<Int> ->
+            Thread {
+                for (i in 1..5) {
+                    emitter.onNext(i)
+                    try {
+                        Thread.sleep(1000)
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                    }
+                }
+            }.start()
+        }
+
+        val src2 = Observable.create { emitter: ObservableEmitter<String> ->
+            Thread {
+                try {
+                    Thread.sleep(500)
+                    emitter.onNext("A")
+                    Thread.sleep(700)
+                    emitter.onNext("B")
+                    Thread.sleep(100)
+                    emitter.onNext("C")
+                    Thread.sleep(700)
+                    emitter.onNext("D")
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }.start()
+        }
+
+        Observable.combineLatest(src1, src2) { num: Int, str: String -> num.toString() + str }
+            .subscribe { x: String? -> println(x) }
+
+        Thread.sleep(5000)
+    }
+
+    @Test
+    fun zip_method() {
+        val src1 = Observable.create { emitter: ObservableEmitter<Int> ->
+            Thread {
+                for (i in 1..5) {
+                    emitter.onNext(i)
+                    try {
+                        Thread.sleep(1000)
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                    }
+                }
+            }.start()
+        }
+
+        val src2 = Observable.create { emitter: ObservableEmitter<String> ->
+            Thread {
+                try {
+                    Thread.sleep(500)
+                    emitter.onNext("A")
+                    Thread.sleep(700)
+                    emitter.onNext("B")
+                    Thread.sleep(100)
+                    emitter.onNext("C")
+                    Thread.sleep(700)
+                    emitter.onNext("D")
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }.start()
+        }
+
+        Observable.zip(src1, src2) { num: Int, str: String -> num.toString() + str }
+            .subscribe { x: String? -> println(x) }
+
+        Thread.sleep(5000)
+    }
+
+    @Test
+    fun merge_method() {
+        val src1 = Observable.intervalRange(1, 5, 0, 100, TimeUnit.MILLISECONDS)
+            .map { value: Long -> value * 20 }
+
+        val src2 = Observable.create { emitter: ObservableEmitter<Int> ->
+            Thread {
+                try {
+                    Thread.sleep(350)
+                    emitter.onNext(1)
+                    Thread.sleep(200)
+                    emitter.onNext(1)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }.start()
+        }
+
+        Observable.merge(src1, src2)
+            .subscribe { x -> println(x) }
+
+        Thread.sleep(1000)
+    }
+
+    @Test
+    fun error_example() {
+        Observable.just("1", "2", "a", "3")
+            .map { i: String -> i.toInt() }
+            .subscribe { x -> println(x) }
+    }
+
+    @Test
+    fun error_example_2() {
+        Observable.just("1", "2", "a", "3")
+            .map { i: String -> i.toInt() }
+            .subscribe({ x: Int? -> println(x) })
+            { t: Throwable? -> println("Error") }
+    }
+
+    @Test
+    fun onErrorReturn_method() {
+        Observable.just("1", "2", "a", "3")
+            .map { i: String -> i.toInt() }
+            .onErrorReturn { throwable -> -1 }
+            .subscribe { x: Int? -> println(x) }
+    }
+
+    @Test
+    fun onErrorResumeNext_method() {
+        Observable.just("1", "2", "a", "3")
+            .map { i: String -> i.toInt() }
+            .onErrorResumeNext { throwable -> Observable.just(100, 200, 300) }
+            .subscribe { x -> println(x) }
+    }
+
+    @Test
+    fun retry_method() {
+        Observable.just("1", "2", "a", "3")
+            .map { i: String -> i.toInt() }
+            .retry()
+            .subscribe { x -> println(x) }
+
     }
 }
