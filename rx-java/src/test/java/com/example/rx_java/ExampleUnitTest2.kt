@@ -1,5 +1,6 @@
 package com.example.rx_java
 
+import io.reactivex.rxjava3.core.Notification
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
 import io.reactivex.rxjava3.disposables.Disposable
@@ -353,4 +354,51 @@ class ExampleUnitTest2 {
             .subscribe { x -> println(x) }
 
     }
+
+    @Test
+    fun doOnEach_method() {
+        Observable.just(1, 2, 3).doOnEach { notification: Notification<Int> ->
+            val i = notification.value
+            val isOnNext = notification.isOnNext
+            val isOnComplete = notification.isOnComplete
+            val isOnError = notification.isOnError
+            val throwable = notification.error
+            println("i = $i")
+            println("isOnNext = $isOnNext")
+            println("isOnComplete = $isOnComplete")
+            println("isOnError = $isOnError")
+            throwable?.printStackTrace()
+        }.subscribe { value -> println("Subscribed = $value")}
+    }
+
+    @Test
+    fun doOnNext_method() {
+        Observable.just(1, 2, 3).doOnNext { item: Int ->
+            require(item <= 1)
+        }.subscribe({ x: Int? -> println(x) }) { throwable: Throwable -> throwable.printStackTrace() }
+    }
+
+    @Test
+    fun doOnSubscribe_method() {
+        Observable.just(1, 2, 3).doOnSubscribe { disposable: Disposable? ->
+                println("구독 시작")
+        }.subscribe { x: Int? -> println(x) }
+    }
+
+    @Test
+    fun doOnComplete_method() {
+        Observable.just(1, 2, 3).doOnComplete {
+            println("완료")
+        }.subscribe { x: Int? -> println(x) }
+    }
+
+    @Test
+    fun doOnError_method() {
+        Observable.just(2, 1, 0)
+            .map { i: Int -> 10 / i }
+            .doOnError { throwable: Throwable? ->
+                println("오류")
+            }.subscribe({ x: Int? -> println(x) }) { t: Throwable -> t.printStackTrace() }
+    }
+
 }
