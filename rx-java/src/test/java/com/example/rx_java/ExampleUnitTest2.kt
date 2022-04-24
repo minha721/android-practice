@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.core.Notification
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.functions.Consumer
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
@@ -401,4 +402,32 @@ class ExampleUnitTest2 {
             }.subscribe({ x: Int? -> println(x) }) { t: Throwable -> t.printStackTrace() }
     }
 
+    @Test
+    fun doOnTerminate_method() {
+        Observable.just(2, 1, 0)
+            .map { i: Int -> 10 / i }
+            .doOnComplete { println("doOnComplete") }
+            .doOnTerminate { println("doOnTerminate") }
+            .subscribe({ x: Int? -> println(x) }) { t: Throwable -> t.printStackTrace() }
+    }
+
+    @Test
+    fun doOnDispose_method() {
+        val src = Observable.interval(500, TimeUnit.MILLISECONDS)
+            .doOnDispose { println("doOnDispose") }
+        val disposable: Disposable = src.subscribe(System.out::println)
+        Thread.sleep(1100)
+        disposable.dispose()
+    }
+
+    @Test
+    fun doFinally_method() {
+        val src: Observable<*> = Observable.interval(500, TimeUnit.MILLISECONDS)
+            .doOnComplete { println("doOnComplete") }
+            .doOnTerminate { println("doOnTerminate") }
+            .doFinally { println("doFinally") }
+        val disposable: Disposable = src.subscribe(System.out::println)
+        Thread.sleep(1100)
+        disposable.dispose()
+    }
 }
