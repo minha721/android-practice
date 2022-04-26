@@ -1,5 +1,6 @@
 package com.example.rx_java
 
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Test
@@ -83,5 +84,116 @@ class ExampleUnitTest3 {
                 println("${Thread.currentThread().name} : ${value}")
             }
         sleep(1000)
+    }
+
+    @Test
+    fun pc_balance_ex() {
+        Observable.range(1, 1000)
+            .map { item: Int ->
+                println("아이템 발행 : $item")
+                item
+            }
+            .subscribe { item: Int -> println("아이템 소비 : $item") }
+        sleep(1000)
+    }
+
+    @Test
+    fun pc_unbalance_ex() {
+        Observable.range(1, 10000)
+            .map { item: Int ->
+                println("아이템 발행 : $item")
+                item
+            }
+            .observeOn(Schedulers.io())
+            .subscribe { item: Int ->
+                println("아이템 소비 : $item")
+                sleep(100)
+            }
+        sleep(10 * 1000)
+    }
+
+    @Test
+    fun flowable_ex() {
+        Flowable.range(1, 10000)
+            .map { item: Int ->
+                println("아이템 발행 : $item")
+                item
+            }
+            .observeOn(Schedulers.io())
+            .subscribe { item: Int ->
+                sleep(100)
+                println("아이템 소비 : $item")
+            }
+        sleep(10 * 1000)
+    }
+
+    @Test
+    fun flowable_exception_ex() {
+        Flowable.interval(10, TimeUnit.MILLISECONDS)
+            .observeOn(Schedulers.io())
+            .map { item: Long ->
+                sleep(2000)
+                println("아이템 발행 : $item")
+                item
+            }
+            .subscribe(
+                { item: Long -> println("아이템 소비 : $item") }
+            ) { throwable: Throwable -> throwable.printStackTrace() }
+        sleep((30 * 1000).toLong())
+    }
+
+    @Test
+    fun onBackPressureBuffer_method() {
+        Flowable.interval(10, TimeUnit.MILLISECONDS)
+            .onBackpressureBuffer()
+            .observeOn(Schedulers.io())
+            .map { item: Long ->
+                sleep(2000)
+                println("아이템 발행 : $item")
+                item
+            }
+            .subscribe(
+                { item: Long -> println("아이템 소비 : $item") }
+            ) { throwable: Throwable -> throwable.printStackTrace() }
+        sleep((30 * 1000).toLong())
+    }
+
+    @Test
+    fun onBackPressureLatest_method() {
+        Flowable.interval(10, TimeUnit.MILLISECONDS)
+            .onBackpressureLatest()
+            .observeOn(Schedulers.io())
+            .subscribe({ item: Long ->
+                sleep(100)
+                println("아이템 소비 : $item") })
+            { throwable: Throwable -> throwable.printStackTrace() }
+
+        sleep((30 * 1000).toLong())
+    }
+
+    @Test
+    fun onBackPressureDrop_method() {
+        Flowable.range(1, 300)
+            .onBackpressureDrop()
+            .observeOn(Schedulers.io())
+            .subscribe({ item: Int ->
+                Thread.sleep(10)
+                println("아이템 소비 : $item") })
+            { throwable: Throwable -> throwable.printStackTrace() }
+        sleep((30 * 1000).toLong())
+    }
+
+    @Test
+    fun onBackPressureDrop_dropCallback_ex() {
+        Flowable.interval(10, TimeUnit.MILLISECONDS)
+            .onBackpressureDrop { item: Long ->
+                println("아이템 버림 : $item")
+            }
+            .observeOn(Schedulers.io())
+            .subscribe({ item: Long ->
+                sleep(100)
+                println("아이템 소비 : $item") })
+            { throwable: Throwable -> throwable.printStackTrace() }
+        sleep((30 * 1000).toLong())
     }
 }
