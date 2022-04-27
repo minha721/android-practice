@@ -1,11 +1,13 @@
 package com.example.rx_java
 
-import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.*
 import org.junit.Test
 import java.lang.Thread.sleep
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
+
 
 class ExampleUnitTest3 {
 
@@ -195,5 +197,115 @@ class ExampleUnitTest3 {
                 println("아이템 소비 : $item") })
             { throwable: Throwable -> throwable.printStackTrace() }
         sleep((30 * 1000).toLong())
+    }
+
+    @Test
+    fun backpressureStrategy_ex() {
+        Flowable.create(FlowableOnSubscribe { emitter: FlowableEmitter<Int> ->
+            for (i in 0..1000) {
+                if (emitter.isCancelled) {
+                    return@FlowableOnSubscribe
+                }
+                emitter.onNext(i)
+            }
+            emitter.onComplete()
+        } as FlowableOnSubscribe<Int>, BackpressureStrategy.BUFFER)
+            .subscribeOn(Schedulers.io())
+            .subscribe({ x -> println(x) }) { t: Throwable -> t.printStackTrace() }
+        sleep(100)
+    }
+
+    @Test
+    fun publishSubject_ex() {
+        val src = PublishSubject.create<Any>()
+        src.subscribe(
+            { item -> println("A : $item") }, { t -> t.printStackTrace() }
+        ) { println("A: onComplete") }
+        src.subscribe(
+            { item -> println("B : $item") }, { t -> t.printStackTrace() }
+        ) { println("B: onComplete") }
+        src.onNext("Hello")
+        src.onNext("World")
+        src.onNext("!!!")
+        src.onComplete()
+    }
+
+    @Test
+    fun publishSubject_ex2() {
+        val src1 = Observable.interval(1, TimeUnit.SECONDS)
+        val src2 = Observable.interval(500, TimeUnit.MILLISECONDS)
+        val subject = PublishSubject.create<Any>()
+
+        src1.map { item -> "A: $item" }.subscribe(subject)
+        src2.map { item -> "B: $item" }.subscribe(subject)
+        subject.subscribe{x -> println(x)}
+        sleep(5000)
+    }
+
+    @Test
+    fun serializedSubject_ex() {
+        val counter = AtomicInteger()
+        val subject = PublishSubject.create<Any>().toSerialized()
+        subject.doOnNext { i -> counter.incrementAndGet() }
+            .doOnNext { i -> counter.decrementAndGet() }
+            .filter { i -> counter.get() !== 0 }
+            .subscribe(System.out::println) { throwable -> throwable.printStackTrace() }
+        val runnable = Runnable {
+            for (i in 0..99999) {
+                try {
+                    sleep(1)
+                } catch (throwable: Throwable) {
+                    throwable.printStackTrace()
+                }
+                subject.onNext(i)
+            }
+        }
+        Thread(runnable).start()
+        Thread(runnable).start()
+        sleep(1000)
+        println("종료")
+    }
+
+    @Test
+    fun behaviorSubject_ex() {
+        val subject = BehaviorSubject.create<Any>()
+        subject.subscribe{item -> println("A: $item")}
+        subject.onNext(1)
+        subject.onNext(2)
+        subject.subscribe{item -> println("B: $item")}
+        subject.onNext(3)
+        subject.subscribe{item -> println("C: $item")}
+    }
+
+    @Test
+    fun replaySubject_ex() {
+        val subject = ReplaySubject.create<Any>()
+        subject.subscribe{item -> println("A: $item")}
+        subject.onNext(1)
+        subject.onNext(2)
+        subject.subscribe{item -> println("B: $item")}
+        subject.onNext(3)
+        subject.subscribe{item -> println("C: $item")}
+    }
+
+    @Test
+    fun asyncSubject_ex() {
+        val subject = AsyncSubject.create<Any>()
+        subject.subscribe{item -> println("A: $item")}
+        subject.onNext(1)
+        subject.onNext(2)
+        subject.subscribe{item -> println("B: $item")}
+        subject.onNext(3)
+        subject.onComplete()
+        subject.subscribe{item -> println("C: $item")}
+    }
+
+    @Test
+    fun unicastSubject_ex() {
+        val subject: Subject<Long> = UnicastSubject.create()
+        Observable.interval(1, TimeUnit.SECONDS).subscribe(subject)
+        sleep(3000)
+        subject.subscribe { i -> println("A: $i") }
+        sleep(2000)
     }
 }
