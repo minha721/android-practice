@@ -56,6 +56,8 @@
         <entry key="mvvm-practice/src/main/res/layout/activity_detail.xml" value="0.33" />
         <entry key="mvvm-practice/src/main/res/layout/activity_main.xml" value="0.37604166666666666" />
         <entry key="mvvm-practice/src/main/res/layout/recycler_movie_item.xml" value="0.37604166666666666" />
+        <entry key="paging-practice/src/main/res/layout/activity_articles.xml" value="0.37604166666666666" />
+        <entry key="paging-practice/src/main/res/layout/article_viewholder.xml" value="0.37604166666666666" />
         <entry key="recycler-selection/src/main/res/layout/activity_main.xml" value="0.333786231884058" />
         <entry key="recycler-selection/src/main/res/layout/recycler_item.xml" value="0.5" />
         <entry key="youtube-player/src/main/res/layout/activity_main.xml" value="0.33" />
