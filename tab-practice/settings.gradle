@@ -1,0 +1,20 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "TabPractice"
+include ':app'
+include ':tablayout'
+include ':tablayout_with_viewpager'
+include ':bottomnavi'
+include ':bottomnavi_with_viewpager'

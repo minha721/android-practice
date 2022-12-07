@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/bottomFragment1"
+        android:icon="@drawable/ic_android"
+        android:title="탭1" />
+    <item
+        android:id="@+id/bottomFragment2"
+        android:icon="@drawable/ic_favorite"
+        android:title="탭2" />
+
+    <item
+        android:id="@+id/bottomFragment3"
+        android:icon="@drawable/ic_star"
+        android:title="탭3" />
+</menu>
