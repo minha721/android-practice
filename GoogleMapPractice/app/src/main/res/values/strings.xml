@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GoogleMapPractice</string>
+    <string name="api_key">api key 입력하세요</string>
+</resources>
